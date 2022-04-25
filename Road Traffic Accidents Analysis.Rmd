@@ -1,0 +1,126 @@
+---
+title: "Road Traffic Accidents Analysis"
+author: "Ayman A. Tuffaha"
+date: "4/22/2022"
+output:
+  pdf_document: default
+---
+## R Markdown
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+```{r}
+
+```
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+output:
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+# import libraries
+library(tidyverse)
+library(caret)
+library(DescTools)
+library(ggcorrplot)
+library(plyr)
+library(dplyr)
+# import data set
+data = read.csv("US_Accidents_Dec21_updated.csv")
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Introduction
+The dataset used at this assignment includes Road Traffic Accidents records in US from the year of 2016 to the year of 2021.
+Datasets can be found here:
+https://www.kaggle.com/datasets/sobhanmoosavi/us-accidents
+https://www.kaggle.com/datasets/sobhanmoosavi/us-accidents?select=US_Accidents_Dec21_updated.csv
+
+For more information and description about the dataset, Please visit the below URL:
+https://smoosavi.org/datasets/us_accidents
+
+## Shows structure of the data frame:
+```{r data_structure, echo=FALSE}
+str(data)
+colnames(data)
+head(data)
+```
+
+## Data Exploration:
+Shows descriptive statistics of each category:
+```{r Data_Summary, echo=FALSE}
+nrow(data)
+ncol(data)
+summary(data)
+```
+## Number of Accidents By State:
+
+```{r Data_Summary, echo=FALSE}
+M <- unique(data$State)
+length(M)
+M
+Accidents_By_State <- count(data$State)
+Accidents_By_State
+nrow(data)
+colnames(data)
+```
+## Analyse and visualize data:
+
+## 1) Analyse Data: Severity of accidents Analysis
+We noticed the most number of accidents Severity is 2 that means most of the accidents is medium level of severity, and low majority of accidents was High or severe accidents.
+```{r hist_score, echo=FALSE}
+data$Severity <- as.integer(data$Severity)
+count_severity <- c(sum(data$Severity==1), sum(data$Severity==2), sum(data$Severity==3), sum(data$Severity==4))
+rf <- count_severity/sum(count_severity)
+barplot(rf, names.arg = 1:4, main = "Relative Frequencies of Accidents Severity")
+```
+## 2) Analyse Data: Longitude and Latitude Analysis
+Distribution of accidents across US map
+We found that more accidents occur in urban areas across the east, west, and middle areas of the USA
+```{r corr_plot, echo=FALSE}
+sort(sapply(data, function(x) sum(is.na(x))),decreasing = TRUE)
+ggplot(data, aes(Start_Lng, Start_Lat)) +
+  geom_point(alpha = 0.05)
+```
+## 3) Analyse Data: Day and Night Accidents Analysis
+This frequency table is for the sunrise_sunset variable. The results shows the majority of accidents occurs at the Day. The explanation of this results because most of the people outdoor at day and most of Ruch hour / crowdies happened at day.
+
+```{r corr_plot, echo=FALSE}
+count_sunrise_sunset <- count(data$Sunrise_Sunset)
+Freq_sunrise_sunset <- count_sunrise_sunset$freq/sum(count_sunrise_sunset$freq)
+barplot(Freq_sunrise_sunset, names.arg = count_sunrise_sunset$x, main = "Relative Frequencies of Day and Night Accidents")
+```
+## 4) Analyse Data: Distance of Accidents Analysis
+This histogram analysis is for the Distance.mi variable.
+Which means the amount of road space affected by the accidents.
+The results shows the majority of accidents not affect that much of the road space and the results was less than 1 mile.
+```{r corr_plot, echo=FALSE}
+Distance <- data$Distance.mi.
+Distance = Distance[Distance < 5]
+hist(Distance, breaks=seq(0,5,0.5), xlab = "Distance (miles)", main="Histogram of Distance of Accidents")
+```
+
+## 5) Analyse Data: Side of Accidents Analysis (Left/ Right Side)
+This frequency table is for the Side variable. 
+That means which side of the road the accidents were reported is it Left/ Right Side.
+The results shows the majority of accidents located at Right side of the road.
+```{r corr_plot, echo=FALSE}
+count_side <- count(data$Side)
+Frequency_side <- count_side$freq/sum(count_side$freq)
+barplot(Frequency_side, names.arg = count_side$x, main = "Relative Frequencies of Accidents side (Left/ Right)")
+```
+## Create a Linear Regression Model of a Data:
+```{r corr_plot, echo=FALSE}
+data$Severity <- as.numeric(data$Severity)
+AccLinearModel <- lm(as.numeric(Severity)~ State    +Pressure.in.+Humidity+Temperature.F.+Wind_Speed.mph,data = training)
+summary(LinearModel)
+```
+```{r corr_plot, echo=FALSE}
+exp(coef(AccLinearModel))
+```
+
+## Summary:
+1- The Dataset is huge and I found difficulties in the training the dataset.
+2- I believe there are missed some important variables/ Features like Driver gender, Age, Years of license issuance which was not exist at the dataset
+3- The Precipitation variable contains a lot of NA values in the dataset.
+4- The most dangerous turn in the US is turning right.

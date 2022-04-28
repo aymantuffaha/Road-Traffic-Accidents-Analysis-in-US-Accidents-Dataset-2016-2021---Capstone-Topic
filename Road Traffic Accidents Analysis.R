@@ -23,7 +23,8 @@ library(dplyr)
 
 # ----- Import dataset -----
 data = read.csv('https://www.kaggle.com/datasets/sobhanmoosavi/us-accidents?select=US_Accidents_Dec21_updated.csv')
-data = read.csv("US_Accidents_Dec21_updated.csv")data
+data = read.csv("US_Accidents_Dec21_updated.csv")
+data
 head(data)
 tail(data)
 

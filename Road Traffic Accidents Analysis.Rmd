@@ -16,7 +16,7 @@ When you click the **Knit** button a document will be generated that includes bo
 output:
   pdf_document: default
 ---
-
+kaggle datasets download -d sobhanmoosavi/us-accidents
 ```{r setup, include=FALSE}
 # import libraries
 library(tidyverse)
@@ -25,8 +25,10 @@ library(DescTools)
 library(ggcorrplot)
 library(plyr)
 library(dplyr)
-# import data set
+# import data set#
 data = read.csv("US_Accidents_Dec21_updated.csv")
+data = read.csv('https://www.kaggle.com/datasets/sobhanmoosavi/us-accidents?select=US_Accidents_Dec21_updated.csv')
+
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
@@ -37,7 +39,6 @@ https://www.kaggle.com/datasets/sobhanmoosavi/us-accidents
 https://www.kaggle.com/datasets/sobhanmoosavi/us-accidents?select=US_Accidents_Dec21_updated.csv
 
 For more information and description about the dataset, Please visit the below URL:
-https://smoosavi.org/datasets/us_accidents
 
 ## Shows structure of the data frame:
 ```{r data_structure, echo=FALSE}

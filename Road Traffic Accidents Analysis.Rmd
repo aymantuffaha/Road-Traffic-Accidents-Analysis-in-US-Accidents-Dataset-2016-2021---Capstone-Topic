@@ -25,9 +25,10 @@ library(DescTools)
 library(ggcorrplot)
 library(plyr)
 library(dplyr)
-# import data set#
-data = read.csv("US_Accidents_Dec21_updated.csv")
+# import data set
+
 data = read.csv('https://www.kaggle.com/datasets/sobhanmoosavi/us-accidents?select=US_Accidents_Dec21_updated.csv')
+data = read.csv("US_Accidents_Dec21_updated.csv")
 
 knitr::opts_chunk$set(echo = TRUE)
 ```
